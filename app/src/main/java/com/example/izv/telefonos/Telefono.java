@@ -6,25 +6,16 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 public class Telefono implements Serializable, Comparable, Parcelable {
-    private String marca, modelo, precio, stock ,id;
+    private String marca, modelo, precio, stock;
 
-    public Telefono(String marca, String modelo, String precio, String stock, String id) {
+    public Telefono(String marca, String modelo, String precio, String stock) {
         this.marca = marca;
         this.modelo = modelo;
         this.precio = precio;
         this.stock = stock;
-        this.id=id;
     }
 
     public Telefono() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getMarca() {
@@ -101,7 +92,6 @@ public class Telefono implements Serializable, Comparable, Parcelable {
         parcel.writeString(this.modelo);
         parcel.writeString(this.precio);
         parcel.writeString(this.stock);
-        parcel.writeString(this.id);
     }
 
 
@@ -113,8 +103,7 @@ public class Telefono implements Serializable, Comparable, Parcelable {
             String modelo = p.readString();
             String precio = p.readString();
             String stock = p.readString();
-            String id = p.readString();
-            return new Telefono(marca, modelo, precio, stock, id);
+            return new Telefono(marca, modelo, precio, stock);
         }
 
         @Override

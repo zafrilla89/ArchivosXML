@@ -29,15 +29,6 @@ public class Anadir extends Activity {
         }
     }
 
-    public void generarid(){
-        Telefono tl;
-        for (int i=0;i<datos.size();i=i+1) {
-            tl=datos.get(i);
-            tl.setId(i+"");
-            datos.set(i,tl);
-        }
-    }
-
     public boolean comprueba(Telefono tl2){
         Telefono tl;
         for (int i=0;i<datos.size();i++){
@@ -50,7 +41,6 @@ public class Anadir extends Activity {
     }
 
     public void guardar(View view){
-        id="";
         etmarca = (EditText) findViewById(R.id.etamarca);
         etmodelo = (EditText) findViewById(R.id.etamodelo);
         etprecio=(EditText)findViewById(R.id.etaprecio);
@@ -61,7 +51,7 @@ public class Anadir extends Activity {
         stock=etstock.getText().toString();
         if (marca.length() > 0 && modelo.length() > 0 && precio.length() > 0 && stock.length() > 0 ) {
             comprobar=true;
-            tl = new Telefono(marca, modelo, precio, stock,id);
+            tl = new Telefono(marca, modelo, precio, stock);
             comprobar=comprueba(tl);
             if(comprobar==true){
                 datos.add(tl);
@@ -70,7 +60,6 @@ public class Anadir extends Activity {
                 tostada("TELÉFONO REPETIDO");
             }
             Collections.sort(datos);
-            generarid();
             semaforo=true;
         }else{
             semaforo=false;
@@ -78,7 +67,6 @@ public class Anadir extends Activity {
         if(semaforo==false) {
             tostada("NO RELLENASTE TODOS LOS CAMPOS");
         }
-
         Intent i = new Intent(this,Principal.class);
         Bundle b = new Bundle();
         b.putParcelableArrayList("datos", datos);

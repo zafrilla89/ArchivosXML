@@ -121,7 +121,7 @@ public class Principal extends Activity {
         return true;
     }
 
-    public void añadirarchivo(){
+    public void anadirarchivo(){
         Telefono tl=new Telefono();
         try {
             FileOutputStream fosxml= new FileOutputStream(new File(getExternalFilesDir(null),"archivo.xml"));
@@ -133,7 +133,6 @@ public class Principal extends Activity {
             for (int i=0;i<datos.size();i++) {
                 tl=datos.get(i);
                 docxml.startTag(null, "Telefono");
-                docxml.attribute(null, "Id", tl.getId());
                 docxml.attribute(null, "Marca", tl.getMarca());
                 docxml.attribute(null, "Modelo", tl.getModelo());
                 docxml.attribute(null, "Precio", tl.getPrecio());
@@ -195,13 +194,12 @@ public class Principal extends Activity {
                         precio=etprecio.getText().toString();
                         stock=etstock.getText().toString();
                         if (marca.length() > 0 && modelo.length() > 0 && precio.length() > 0 && stock.length() > 0 ) {
-                            Telefono tl2=new Telefono(marca,modelo,precio,stock, id);
+                            Telefono tl2=new Telefono(marca,modelo,precio,stock);
                             boolean comprobar=true;
                             comprobar=comprueba(tl2);
-                            if(comprobar==true) {
-                                tl2.setId(index+1+"");
-                                editarxml(tl2);
+                            if(comprobar==true){
                                 datos.set(index, tl2);
+                                anadirarchivo();
                                 tostada("TELÉFONO EDITADO");
                             }else{
                                 tostada("TELÉFONO REPETIDO");
@@ -222,53 +220,13 @@ public class Principal extends Activity {
         return true;
     }
 
-    public void editarxml(Telefono tl2){
-        Telefono tl=new Telefono();
-        try {
-            FileOutputStream fosxml= new FileOutputStream(new File(getExternalFilesDir(null),"archivo.xml"));
-            XmlSerializer docxml = Xml.newSerializer();
-            docxml.setOutput(fosxml, "UTF-8");
-            docxml.startDocument(null, Boolean.valueOf(true));
-            docxml.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-            docxml.startTag(null, "Telefonos");
-            for (int i=0;i<datos.size();i++) {
-                tl=datos.get(i);
-                if(tl2.getId().compareTo(i+1+"")==0){
-                    docxml.startTag(null, "Telefono");
-                    docxml.attribute(null, "Id", tl2.getId());
-                    docxml.attribute(null, "Marca", tl2.getMarca());
-                    docxml.attribute(null, "Modelo", tl2.getModelo());
-                    docxml.attribute(null, "Precio", tl2.getPrecio());
-                    docxml.attribute(null, "Stock", tl2.getStock());
-                    docxml.endTag(null, "Telefono");
-                }else {
-                    docxml.startTag(null, "Telefono");
-                    docxml.attribute(null, "Id", tl.getId());
-                    docxml.attribute(null, "Marca", tl.getMarca());
-                    docxml.attribute(null, "Modelo", tl.getModelo());
-                    docxml.attribute(null, "Precio", tl.getPrecio());
-                    docxml.attribute(null, "Stock", tl.getStock());
-                    docxml.endTag(null, "Telefono");
-                }
-            }
-            docxml.endTag(null, "Telefonos");
-            docxml.endDocument();
-            docxml.flush();
-            fosxml.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void iniciarComponentes() {
         datos = new ArrayList();
         Bundle b = getIntent().getExtras();
         if(b !=null ){
             datos = b.getParcelableArrayList("datos");
             Collections.sort(datos);
-            añadirarchivo();
+            anadirarchivo();
         }else {
             leerarchivo();
         }
@@ -280,7 +238,6 @@ public class Principal extends Activity {
     }
 
     public void leerarchivo(){
-
         File archivo = new File(getExternalFilesDir(null), "archivo.xml");
         if (archivo.exists()) {
             XmlPullParser lectorxml = Xml.newPullParser();
@@ -292,7 +249,6 @@ public class Principal extends Activity {
                         Telefono tl = new Telefono();
                         String etiqueta = lectorxml.getName();
                         if (etiqueta.compareTo("Telefono") == 0) {
-                            tl.setId(lectorxml.getAttributeValue(null, "Id"));
                             tl.setMarca(lectorxml.getAttributeValue(null, "Marca"));
                             tl.setModelo(lectorxml.getAttributeValue(null, "Modelo"));
                             tl.setPrecio(lectorxml.getAttributeValue(null, "Precio"));
@@ -312,6 +268,8 @@ public class Principal extends Activity {
         }
     }
 
+
+
     public void tostada (String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
@@ -327,7 +285,7 @@ public class Principal extends Activity {
         int index;
         index=(Integer)v.getTag();
         datos.remove(index);
-        añadirarchivo();
+        anadirarchivo();
         ad.notifyDataSetChanged();
     }
 
@@ -338,3 +296,5 @@ public class Principal extends Activity {
     }
 
 }
+
+
