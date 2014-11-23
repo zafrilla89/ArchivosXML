@@ -37,6 +37,7 @@ public class Principal extends Activity {
     private EditText etmarca, etmodelo, etprecio, etstock;
     String marca, modelo, precio, stock;
     boolean semaforo=false;
+    Telefono tleditar;
 
 
     /***********************************************************************/
@@ -150,12 +151,16 @@ public class Principal extends Activity {
         }
     }
 
-    public boolean comprueba(Telefono tl){
-        Telefono tl2;
-        for (int i=0;i<datos.size();i++){
-            tl2=datos.get(i);
-            if(tl.equals(tl2)){
-                return false;
+    public boolean comprueba(Telefono tl2, Telefono tl){
+        Telefono tl3;
+        if(tl.equals(tl2)){
+            return true;
+        }else {
+            for (int i = 0; i < datos.size(); i++) {
+                tl3 = datos.get(i);
+                if (tl2.equals(tl3)) {
+                    return false;
+                }
             }
         }
         return true;
@@ -171,12 +176,12 @@ public class Principal extends Activity {
         etmodelo = (EditText) vista.findViewById(R.id.etmodelo);
         etprecio=(EditText)vista.findViewById(R.id.etprecio);
         etstock=(EditText)vista.findViewById(R.id.etstock);
-        Telefono tl=new Telefono();
-        tl=datos.get(index);
-        marca=tl.getMarca();
-        modelo=tl.getModelo();
-        precio=tl.getPrecio();
-        stock=tl.getStock();
+        tleditar=new Telefono();
+        tleditar=datos.get(index);
+        marca=tleditar.getMarca();
+        modelo=tleditar.getModelo();
+        precio=tleditar.getPrecio();
+        stock=tleditar.getStock();
         etmarca.setText(marca);
         etmodelo.setText(modelo);
         etprecio.setText(precio);
@@ -196,7 +201,7 @@ public class Principal extends Activity {
                         if (marca.length() > 0 && modelo.length() > 0 && precio.length() > 0 && stock.length() > 0 ) {
                             Telefono tl2=new Telefono(marca,modelo,precio,stock);
                             boolean comprobar=true;
-                            comprobar=comprueba(tl2);
+                            comprobar=comprueba(tl2,tleditar);
                             if(comprobar==true){
                                 datos.set(index, tl2);
                                 anadirarchivo();
